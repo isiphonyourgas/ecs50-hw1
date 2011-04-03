@@ -1,32 +1,39 @@
-/// Jason Wong, Gowtham Vijayaragavan, Meenal Tambe, Aaron Okano
+// Jason Wong, Gowtham Vijayaragavan, Meenal Tambe, Aaron Okano
 
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
 #include <curses.h>
+#include "matrix.h"
 
 
-using namespace::std;
+//using namespace::std;
 
-bool arg_check(int, char**);
+
+int arg_check(int argc);
 
 int main(int argc, char *argv[])
 {
-  bool check;
-  check = arg_check(argc, argv);
+  int check;
+cout <<" Test\n";
+  check = arg_check(argc);
   if (check != 0)
   {
-    cout << check << endl;;
+    //read_matrix();
+  } else {//matrix is initialized
+    
   }
   return 0;
 }
 
-bool arg_check(int argc)
+int arg_check(int argc)
 {
   if(argc == 4)
   {
-    return false;
+    return 1;
   } else {
-    return true;
+    return 0;
   }
 }
+
+
