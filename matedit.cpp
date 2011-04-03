@@ -1,4 +1,4 @@
-// Jason Wong, Gowtham Vijayaragavan, Meenal Tambe, Aaron Okano
+/// Jason Wong, Gowtham Vijayaragavan, Meenal Tambe, Aaron Okano
 
 #include <iostream>
 #include <fstream>
