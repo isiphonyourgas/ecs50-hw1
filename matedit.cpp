@@ -15,13 +15,18 @@ int arg_check(int argc);
 int main(int argc, char *argv[])
 {
   int check;
+  char d;
+  Matrix *data;
 cout <<" Test\n";
   check = arg_check(argc);
   if (check != 0)
   {
     //read_matrix();
   } else {//matrix is initialized
-    
+    int rows = atoi(argv[2]);
+    int cols = atoi(argv[3]);
+    data = new Matrix;
+    *data = Matrix(rows, cols);
   }
   return 0;
 }
