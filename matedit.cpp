@@ -25,8 +25,8 @@ cout <<" Test\n";
   } else {//matrix is initialized
     int rows = atoi(argv[2]);
     int cols = atoi(argv[3]);
-    data = new Matrix;
-    *data = Matrix(rows, cols);
+    data = new Matrix(rows, cols);
+   // *data = Matrix(rows, cols);
   }
   return 0;
 }

@@ -14,7 +14,7 @@ Matrix :: Matrix (int a, int b)
   }
 }
 
-int Matrix :: get(int r_index, int c_index)
+int Matrix :: get(int r_index, int c_index) const
 {
   return content[r_index][c_index];
 }
