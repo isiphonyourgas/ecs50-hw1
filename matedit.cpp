@@ -21,23 +21,12 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-bool arg_check(int argc, char *argv[])//will initialize a matrix
+bool arg_check(int argc)
 {
-  int nrows, ncols;
-  if (argc > 4)//Checks for the number of arguments
-    {
-    cout << "Error: Too many arguements in command line\n";
+  if(argc == 4)
+  {
     return false;
-    }
-  if (argc == 3)//Checks for only 3 arguements
-    {
-    cout << "Error: Missing the number of columns in command line\n";
-    return false;
-    }
-  if (argc == 1)//Checks for the number of arguments
-    {
-    cout << "Error: Missing filename\n";
-    return false;
-    }
-  return true;// Arguements are correct
-}//arg_check
+  } else {
+    return true;
+  }
+}
