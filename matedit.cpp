@@ -16,18 +16,24 @@ int main(int argc, char *argv[])
 {
   int check;
   char d;
-  Matrix *data;
-cout <<" Test\n";
-  check = arg_check(argc);
-  if (check != 0)
+  int rows, cols;
+ // Matrix *data;
+  if (argc != 4)// there will be 2 arguments
   {
-    //read_matrix();
-  } else {//matrix is initialized
-    int rows = atoi(argv[2]);
-    int cols = atoi(argv[3]);
-    data = new Matrix(rows, cols);
-   // *data = Matrix(rows, cols);
+    //rows and cols
+    //
+  } else {//checks the dimensions of the matrix
+    rows = atoi(argv[2]);
+    cols = atoi(argv[3]);
   }
+  int data[rows][cols];
+  if( check != 4)
+  {
+    //read from file
+  } else {
+    //make all entries 0
+  }
+
   return 0;
 }
 
