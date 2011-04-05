@@ -16,12 +16,31 @@ using namespace std;
 
 int rows, cols, r, c;
 
+int** readFile( int &mrows, int &mcols, ifstream &file )
+{
+  int i,j;
+  // read in the rows and columns first
+  file.read( reinterpret_cast<char*>(&mrows), 4);
+  file.read( reinterpret_cast<char*>(&mcols), 4);
+  int **data = new int*[mrows];
+  for( i = 0; i < mrows; i++ )
+    data[i] = new int[mcols];
+  
+  // read in the matrix in row-major order
+  for( i = 0; i < mrows; i++ )
+    for( j = 0; j < mcols; j++ )
+      file.read( reinterpret_cast<char*>(&data[i][j]), 4);
+
+  return data;
+}
+
 void saveFile( int *data[], int mrows, int mcols, ofstream &file )
 {
   int i,j;
   // write rows and columns first
   file.write((char*)&mrows,4);
   file.write((char*)&mcols,4);
+
   for( i = 0; i < mrows; i++ )
   {
     for( j = 0; j < mcols; j++ )
@@ -31,45 +50,51 @@ void saveFile( int *data[], int mrows, int mcols, ofstream &file )
   }
 }
 
+int** newMatrix( int mrows, int mcols )
+{
+  int i,j;
+  int **data = new int*[mrows];
+  for( i = 0; i < mrows; i++ )
+    data[i] = new int[mcols];
+  for(i = 0; i < mrows; i++)
+  {
+    for(j=0; j < mcols; j++)
+    {
+      data[i][j] = 0;
+    }
+  }
+  return data;
+}
+
+
 int main(int argc, char *argv[])
 {
   char d;
   int mrows = 0, mcols = 0;
   int i,j;
+  int **data;
   string dstring;
   ofstream f;
+  ifstream p;
  // Matrix *data;
   if (argc == 2)// there will be 2 arguments
   {
-    mrows = 2;
-    mcols = 2;//read from files
-    
-  } else {//checks the dimensions of the matrix
-    f.open( argv[1], ios::out | ios::binary );
+    p.open( argv[1], ios::in | ios::binary );
+    if( !p )
+    {
+      cout << "There is no file " << argv[1] << "." << endl;
+      return 0;
+    }
+    data = readFile( mrows, mcols, p );
+    p.close(); 
+  } 
+  else 
+  {
+    //checks the dimensions of the matrix
+    //f.open( argv[1], ios::out | ios::binary );
     mrows = atoi(argv[2]);
     mcols = atoi(argv[3]);
-  }
-
-  int **data = new int*[mrows];
-  for( i = 0; i < mrows; i++ )
-    data[i] = new int[mcols];
-  if( check != 4)
-  {
-    for(i = 0; i < mrows; i++)
-    {
-      for(j=0; j < mcols; j++)
-      {
-        data[i][j] = 0;
-      }
-    }
-  } else {
-    for(i = 0; i < mrows; i++)
-    {
-      for(j = 0; i < mcols; j++)
-      {
-        data[i][j] = 12;
-      }
-    }
+    data = newMatrix( mrows, mcols );
   }
 
   WINDOW *wnd;
