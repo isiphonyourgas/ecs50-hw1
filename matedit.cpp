@@ -8,13 +8,28 @@
 #include <string>
 #include <sstream>
 
-//using namespace::std;
+using namespace std;
 
 
 int arg_check(int argc);
 //void load_matrix(int* data[], int mrows, int mcols);
 
 int rows, cols, r, c;
+
+void saveFile( int *data[], int mrows, int mcols, ofstream &file )
+{
+	int i,j;
+	// write rows and columns first
+	file.write((char*)&mrows,4);
+	file.write((char*)&mcols,4);
+	for( i = 0; i < mrows; i++ )
+	{
+		for( j = 0; j < mcols; j++ )
+		{
+			file.write((char*)&data[i][j], 4);
+		}
+	}
+}
 
 int main(int argc, char *argv[])
 {
@@ -23,6 +38,7 @@ int main(int argc, char *argv[])
   int mrows = 0, mcols = 0;
   int i,j;
   string dstring;
+	ofstream f;
  // Matrix *data;
   if (argc != 4)// there will be 2 arguments
   {
@@ -30,10 +46,13 @@ int main(int argc, char *argv[])
     mcols = 2;//read from files
     
   } else {//checks the dimensions of the matrix
+		f.open( argv[1], ios::out | ios::binary );
     mrows = atoi(argv[2]);
     mcols = atoi(argv[3]);
   }
-  int data[mrows][mcols];
+  int **data = new int*[mrows];
+	for( i = 0; i < mrows; i++ )
+		data[i] = new int[mcols];
   if( check != 4)
   {
     for(i = 0; i < mrows; i++)
@@ -92,6 +111,8 @@ int main(int argc, char *argv[])
   while(1)
   {
     d = getch();
+		if(d == 's')
+			saveFile( data, mrows, mcols, f );
     if(d == 'q')
       break;
   }
