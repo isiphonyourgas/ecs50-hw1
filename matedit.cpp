@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
     d = getch();
     if(d == 's')
     {
-      f.open( argv[1], ios::in | ios::binary );
+      f.open( argv[1], ios::out | ios::binary );
       saveFile( data, mrows, mcols, f );
       f.close();
     }
