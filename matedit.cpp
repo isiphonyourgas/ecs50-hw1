@@ -60,7 +60,7 @@ int** newMatrix( int mrows, int mcols )
   {
     for(j=0; j < mcols; j++)
     {
-      data[i][j] = -1000000000;
+      data[i][j] = 0;
     }
   }
   return data;
