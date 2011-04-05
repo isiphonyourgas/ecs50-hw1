@@ -66,7 +66,7 @@ int** newMatrix( int mrows, int mcols )
   return data;
 }
 
-
+// main function. tests whether a file exists. open and reads the existing file.
 int main(int argc, char *argv[])
 {
   char d;
@@ -81,23 +81,24 @@ int main(int argc, char *argv[])
   if (argc == 2)// there will be 2 arguments
   {
     p.open( argv[1], ios::in | ios::binary );
+    // if the file doesn't exist.
     if( !p )
     {
       cout << "There is no file " << argv[1] << "." << endl;
       return 0;
     }
+    // reads in the file and the user inputs for rows and columns
     data = readFile( mrows, mcols, p );
     p.close(); 
   } 
   else 
   {
     //checks the dimensions of the matrix
-    //f.open( argv[1], ios::out | ios::binary );
     mrows = atoi(argv[2]);
     mcols = atoi(argv[3]);
     data = newMatrix( mrows, mcols );
   }
-
+  // using ncurses for the display in the new window
   WINDOW *wnd;
   wnd = initscr();
   getmaxyx(wnd,rows,cols);
@@ -134,8 +135,10 @@ int main(int argc, char *argv[])
     ss.str("");
   }
   cmd = "";
+  // loop to create original commands to save the file and exit
   while(1)
   {
+    // save and exit
     d = getch();
     if( d == '\n')
     {
@@ -146,6 +149,7 @@ int main(int argc, char *argv[])
         f.close();
         break;
       }
+     // move the cursor
       else if(cmd.substr(0,2) == "mc")
       {
         stringstream command;
@@ -162,9 +166,10 @@ int main(int argc, char *argv[])
         continue;
       }
       cmd = "";
-    } else {  
+    } 
+      else {  
       cmd += d;
-    }
+      }
   } 
   endwin();
   return 0;
