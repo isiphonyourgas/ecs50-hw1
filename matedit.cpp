@@ -9,7 +9,7 @@
 
 using namespace std;
 
-int rows, cols, r, c;
+int rows, cols, r, c, topr, topc;
 
 // reads in the data file
 int** readFile( int &mrows, int &mcols, ifstream &file )
@@ -65,6 +65,35 @@ int** newMatrix( int mrows, int mcols )
   return data;
 }
 
+void draw( int *data[], int tr, int tc )
+{
+  stringstream ss;
+  // Here we make a string (dstring) of spaces with a length of 12
+  // and then replace the last spaces with the number stored in
+  // the matrix array.
+  for(i = topr; i < topr + (rows-1); i++)
+  {
+    for(j = topc; j < topc + cols/12; j++)
+    {
+      dstring = "            ";
+      ss << data[i][j];
+      dstring += ss.str();
+      dstring = dstring.substr(ss.str().length(), 12);
+      addstr(dstring.c_str());
+      c += 12;
+      move(r,c);
+      refresh();
+      // reset the stream
+      ss.flush();
+      ss.str("");
+    }
+    r++;
+    c = 0;
+    move(r,c);
+    ss.str("");
+  }
+}
+
 // main function. tests whether a file exists. open and reads the existing file.
 int main(int argc, char *argv[])
 {
@@ -103,33 +132,10 @@ int main(int argc, char *argv[])
   clear();
   noecho();
   refresh();
+  topr = 0; topc = 0;
 
   move(r,c);
-  stringstream ss;
-  // Here we make a string (dstring) of spaces with a length of 12
-  // and then replace the last spaces with the number stored in
-  // the matrix array.
-  for(i = 0; i < mrows; i++)
-  {
-    for(j = 0; j < mcols; j++)
-    {
-      dstring = "            ";
-      ss << data[i][j];
-      dstring += ss.str();
-      dstring = dstring.substr(ss.str().length(), 12);
-      addstr(dstring.c_str());
-      c += 12;
-      move(r,c);
-      refresh();
-      // reset the stream
-      ss.flush();
-      ss.str("");
-    }
-    r++;
-    c = 0;
-    move(r,c);
-    ss.str("");
-  }
+
   // set to blank to start
   cmd = "";
   // loop to create original commands to save the file and exit
