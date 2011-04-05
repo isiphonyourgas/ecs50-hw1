@@ -1,21 +1,17 @@
-// Jason Wong, Gowtham Vijayaragavan, Meenal Tambe, Aaron Okano
+// Aaron Okano, Jason Wong, Gowtham Vijayaragavan, Meenal Tambe
 
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
 #include <curses.h>
-#include "matrix.h"
 #include <string>
 #include <sstream>
 
 using namespace std;
 
-
-//int arg_check(int argc);
-//void load_matrix(int* data[], int mrows, int mcols);
-
 int rows, cols, r, c;
 
+// reads in the data file
 int** readFile( int &mrows, int &mcols, ifstream &file )
 {
   int i,j;
@@ -34,6 +30,7 @@ int** readFile( int &mrows, int &mcols, ifstream &file )
   return data;
 }
 
+// saves the data file
 void saveFile( int *data[], int mrows, int mcols, ofstream &file )
 {
   int i,j;
@@ -41,6 +38,7 @@ void saveFile( int *data[], int mrows, int mcols, ofstream &file )
   file.write((char*)&mrows,4);
   file.write((char*)&mcols,4);
 
+  // write actual data
   for( i = 0; i < mrows; i++ )
   {
     for( j = 0; j < mcols; j++ )
@@ -50,6 +48,7 @@ void saveFile( int *data[], int mrows, int mcols, ofstream &file )
   }
 }
 
+// create new matrix filled with zeros
 int** newMatrix( int mrows, int mcols )
 {
   int i,j;
@@ -69,7 +68,7 @@ int** newMatrix( int mrows, int mcols )
 
 int main(int argc, char *argv[])
 {
-  char d;
+  char d; // used with getch
   int mrows = 0, mcols = 0;
   int i,j, rtemp, ctemp;
   int **data;
@@ -77,7 +76,6 @@ int main(int argc, char *argv[])
   string cmd, cmd_part;
   ofstream f;
   ifstream p;
- // Matrix *data;
   if (argc == 2)// there will be 2 arguments
   {
     p.open( argv[1], ios::in | ios::binary );
@@ -92,7 +90,6 @@ int main(int argc, char *argv[])
   else 
   {
     //checks the dimensions of the matrix
-    //f.open( argv[1], ios::out | ios::binary );
     mrows = atoi(argv[2]);
     mcols = atoi(argv[3]);
     data = newMatrix( mrows, mcols );
@@ -103,15 +100,13 @@ int main(int argc, char *argv[])
   getmaxyx(wnd,rows,cols);
   clear();
   noecho();
-  //cbreaks();
   refresh();
-  
-
-  //load_matrix(data, mrows, mcols);
 
   move(r,c);
- // char *d;
   stringstream ss;
+  // Here we make a string (dstring) of spaces with a length of 12
+  // and then replace the last spaces with the number stored in
+  // the matrix array.
   for(i = 0; i < mrows; i++)
   {
     for(j = 0; j < mcols; j++)
@@ -121,10 +116,10 @@ int main(int argc, char *argv[])
       dstring += ss.str();
       dstring = dstring.substr(ss.str().length(), 12);
       addstr(dstring.c_str());
-      //addch(' ');
       c += 12;
       move(r,c);
       refresh();
+      // reset the stream
       ss.flush();
       ss.str("");
     }
@@ -133,12 +128,16 @@ int main(int argc, char *argv[])
     move(r,c);
     ss.str("");
   }
+  // set to blank to start
   cmd = "";
   while(1)
   {
+    // d will be added to the cmd string if it's not '\n'
     d = getch();
+    // when enter is pressed, process the characters stored in cmd
     if( d == '\n')
     {
+      // command for "save and exit"
       if(cmd == "sve")
       {
         f.open( argv[1], ios::out | ios::binary );
@@ -146,23 +145,33 @@ int main(int argc, char *argv[])
         f.close();
         break;
       }
-      else if(cmd.substr(0,2) == "mc")
+      // command for move cursor
+      else if(cmd.substr(0,2) == "mc") // check first two chars of cmd
       {
+        // make a stream from cmd, ignore the "mc" portion
+        // and then read in the integers that follow into
+        // rtemp and ctemp
         stringstream command;
         command << cmd;
         command.ignore( 3, ' ');
         command >> rtemp;
         command >> ctemp;
+        // adjust to the "true" dimensions of the matrix
         r = rtemp - 1;
         c = (ctemp * 12) - 1;
+        // move to correct position
         move( r  , c);
       }
       else
       {
+        // go back to beginning of loop if something went wrong
         continue;
       }
-      cmd = "";
-    } else {  
+      cmd = ""; // reset cmd
+    } 
+    else
+    {  
+      // if enter is not pressed, add the character to cmd
       cmd += d;
     }
   } 
@@ -170,29 +179,3 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-/*int arg_check(int argc)
-{
-  if(argc == 4)
-  {
-    return 1;
-  } else {
-    return 0;
-  }
-}*/
-
-/*void load_matrix(int* data[], int mrows, int mcols)
-{
-  int i, j;
-  move(r,c);
-  char *d;
-  for(i = 0; i < mrows; i++)
-  {
-    d = itoa(data[i][j]);
-    addch(*d);
-    c++;
-    move(r,c);
-    refresh();
-  }
-  
-
-}*/
