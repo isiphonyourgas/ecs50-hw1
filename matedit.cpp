@@ -74,6 +74,7 @@ int main(int argc, char *argv[])
   int i,j;
   int **data;
   string dstring;
+  string cmd;
   ofstream f;
   ifstream p;
  // Matrix *data;
@@ -132,19 +133,32 @@ int main(int argc, char *argv[])
     move(r,c);
     ss.str("");
   }
-
+  cmd = "";
   while(1)
   {
     d = getch();
-    if(d == 's')
+    if( d == '\n')
     {
-      f.open( argv[1], ios::out | ios::binary );
-      saveFile( data, mrows, mcols, f );
-      f.close();
+      if(cmd == "sve")
+      {
+        f.open( argv[1], ios::out | ios::binary );
+        saveFile( data, mrows, mcols, f );
+        f.close();
+        break;
+      }
+      else if(cmd.substr(0,2) == "mc")
+      {
+        break;
+      }
+      else
+      {
+        continue;
+      }
+      cmd = "";
+    } else {  
+      cmd += d;
     }
-    if(d == 'q')
-      break;
-  }
+  } 
   endwin();
   return 0;
 }
