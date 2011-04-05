@@ -60,7 +60,7 @@ int** newMatrix( int mrows, int mcols )
   {
     for(j=0; j < mcols; j++)
     {
-      data[i][j] = 0;
+      data[i][j] = -1000000000;
     }
   }
   return data;
@@ -71,10 +71,10 @@ int main(int argc, char *argv[])
 {
   char d;
   int mrows = 0, mcols = 0;
-  int i,j;
+  int i,j, rtemp, ctemp;
   int **data;
   string dstring;
-  string cmd;
+  string cmd, cmd_part;
   ofstream f;
   ifstream p;
  // Matrix *data;
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
       dstring = dstring.substr(ss.str().length(), 12);
       addstr(dstring.c_str());
       //addch(' ');
-      c += 13;
+      c += 12;
       move(r,c);
       refresh();
       ss.flush();
@@ -148,7 +148,14 @@ int main(int argc, char *argv[])
       }
       else if(cmd.substr(0,2) == "mc")
       {
-        break;
+        stringstream command;
+        command << cmd;
+        command.ignore( 3, ' ');
+        command >> rtemp;
+        command >> ctemp;
+        r = rtemp - 1;
+        c = (ctemp * 12) - 1;
+        move( r  , c);
       }
       else
       {
