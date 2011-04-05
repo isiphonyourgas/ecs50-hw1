@@ -11,20 +11,19 @@
 //using namespace::std;
 
 
-int arg_check(int argc);
+//int arg_check(int argc);
 //void load_matrix(int* data[], int mrows, int mcols);
 
 int rows, cols, r, c;
 
 int main(int argc, char *argv[])
 {
-  int check;
   char d;
   int mrows = 0, mcols = 0;
   int i,j;
   string dstring;
  // Matrix *data;
-  if (argc != 4)// there will be 2 arguments
+  if (argc == 2)// there will be 2 arguments
   {
     mrows = 2;
     mcols = 2;//read from files
@@ -34,13 +33,13 @@ int main(int argc, char *argv[])
     mcols = atoi(argv[3]);
   }
   int data[mrows][mcols];
-  if( check != 4)
+  if( argc == 4)
   {
     for(i = 0; i < mrows; i++)
     {
       for(j=0; j < mcols; j++)
       {
-        data[i][j] = -1000000000;
+        data[i][j] = 0;
       }
     }
   } else {
@@ -99,7 +98,7 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-int arg_check(int argc)
+/*int arg_check(int argc)
 {
   if(argc == 4)
   {
@@ -107,7 +106,7 @@ int arg_check(int argc)
   } else {
     return 0;
   }
-}
+}*/
 
 /*void load_matrix(int* data[], int mrows, int mcols)
 {
