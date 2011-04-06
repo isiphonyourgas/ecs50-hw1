@@ -204,7 +204,7 @@ int main(int argc, char *argv[])
 				while( !command.eof() )
 				{
 				  command >> num;
-				  if(col > mcols)
+				  if(col == mcols)
 					{
 					  col = 0;
 						row++;

@@ -1,6 +1,6 @@
-matedit: matedit.cpp matrix.h
-	g++ -Wall -ansi -g matedit.cpp matrix.cpp matrix.h -lcurses -o matedit
+matedit: matedit.cpp
+	g++ -Wall -ansi -g matedit.cpp -lcurses -o matedit
 
 
 clean:
-	rm  *.o
+	rm  -f matedit
