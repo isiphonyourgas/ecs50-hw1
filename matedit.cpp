@@ -76,15 +76,15 @@ int** newMatrix( int mrows, int mcols )
 
 void draw( int *data[], int tr, int tc, int mrows, int mcols )
 {
-	int tmprow = row;
-	int tmpcol = col;
+	int tmprow = tr;
+	int tmpcol = tc;
   topr = tr;
 	topc = tc;
   stringstream ss;
   int i, j;
   string dstring;
 	clear();
-	move( r(tmprow), c(tmpcol)-11 );
+	move( r(topr), c(topc)-11 );
   // Here we make a string (dstring) of spaces with a length of 12
   // and then replace the last spaces with the number stored in
   // the matrix array.
@@ -151,6 +151,7 @@ int main(int argc, char *argv[])
   clear();
   noecho();
   refresh();
+	stringstream command;
   topr = 0; topc = 0;
 	row = 0; col = 0;
 
@@ -182,7 +183,6 @@ int main(int argc, char *argv[])
         // make a stream from cmd, ignore the "mc" portion
         // and then read in the integers that follow into
         // row and col
-        stringstream command;
         command << cmd;
         command.ignore( 3, ' ');
         command >> row;
@@ -194,10 +194,36 @@ int main(int argc, char *argv[])
 				  draw( data, row, col, mrows, mcols );
         // move to correct position
         move( r(), c() );
+				command.clear();
+				command.sync();
       }
+			else if(cmd.substr(0,2) == "ec")
+			{
+			  // like with mc, we make a stream and read ints
+				command << cmd;
+				command.ignore( 3, ' ' );
+				int num;
+				while( !command.eof() )
+				{
+				  command >> num;
+				  if(col > mcols)
+					{
+					  col = 0;
+						row++;
+				  }
+					data[row][col] = num;
+					col++;
+				}
+				draw( data, topr, topc, mrows, mcols );
+				move(r(),c());
+			  command.clear();
+				command.sync();
+			}
+
       else
       {
-        // go back to beginning of loop if something went wrong
+        // go back to beginning of loop if something went wrongi
+				cmd = "";
         continue;
       }
       cmd = ""; // reset cmd
