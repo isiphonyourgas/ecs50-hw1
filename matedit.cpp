@@ -69,6 +69,7 @@ void draw( int *data[], int tr, int tc )
 {
   stringstream ss;
   int i, j;
+  string dstring = "            ";
   // Here we make a string (dstring) of spaces with a length of 12
   // and then replace the last spaces with the number stored in
   // the matrix array.
@@ -76,7 +77,7 @@ void draw( int *data[], int tr, int tc )
   {
     for(j = topc; j < topc + cols/12; j++)
     {
-      dstring = "            ";
+      //dstring = "            ";
       ss << data[i][j];
       dstring += ss.str();
       dstring = dstring.substr(ss.str().length(), 12);
