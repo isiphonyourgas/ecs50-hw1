@@ -68,7 +68,7 @@ int** newMatrix( int mrows, int mcols )
   {
     for(j=0; j < mcols; j++)
     {
-      data[i][j] = 0;
+      data[i][j] = j;
     }
   }
   return data;
@@ -83,6 +83,8 @@ void draw( int *data[], int tr, int tc, int mrows, int mcols )
   stringstream ss;
   int i, j;
   string dstring;
+	clear();
+	move( r(tmprow), c(tmpcol)-11 );
   // Here we make a string (dstring) of spaces with a length of 12
   // and then replace the last spaces with the number stored in
   // the matrix array.
@@ -97,16 +99,16 @@ void draw( int *data[], int tr, int tc, int mrows, int mcols )
       addstr(dstring.c_str());
       tmpcol++;
       move(r(tmprow),c(tmpcol)-11);
-      refresh();
       // reset the stream
       ss.flush();
       ss.str("");
     }
     tmprow++;
-    tmpcol = 0;
+    tmpcol = topc;
     move(r(tmprow),c(tmpcol)-11);
     ss.str("");
   }
+	refresh();
 }
 
 // main function. tests whether a file exists. open and reads the existing file.
@@ -152,7 +154,6 @@ int main(int argc, char *argv[])
   topr = 0; topc = 0;
 	row = 0; col = 0;
 
-	move(r(), c()-11);
 	draw( data, 0, 0, mrows, mcols );
 
   move(r(),c());
