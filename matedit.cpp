@@ -68,6 +68,7 @@ int** newMatrix( int mrows, int mcols )
 void draw( int *data[], int tr, int tc )
 {
   stringstream ss;
+  int i, j;
   // Here we make a string (dstring) of spaces with a length of 12
   // and then replace the last spaces with the number stored in
   // the matrix array.
@@ -99,7 +100,8 @@ int main(int argc, char *argv[])
 {
   char d; // used with getch
   int mrows = 0, mcols = 0;
-  int i,j, rtemp, ctemp;
+  //int i,j, 
+  int rtemp, ctemp;
   int **data;
   string dstring;
   string cmd, cmd_part;
