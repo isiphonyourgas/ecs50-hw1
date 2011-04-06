@@ -1,4 +1,4 @@
-nclude <curses.h>  // required
+#include <curses.h>  // required
 #include <stdlib.h>
 
 
@@ -136,7 +136,8 @@ int main(int argc, char *argv[])
                  fwrite(&numval, sizeof(int), 1, fPtr);
               }
          }
-         fclose(fPtr);         
+         fclose(fPtr);
+         break;         
       }
       else break;
 
