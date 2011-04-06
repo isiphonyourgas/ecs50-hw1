@@ -135,13 +135,18 @@ int main(int argc, char *argv[])
     data = readFile( mrows, mcols, p );
     p.close(); 
   } 
-  else 
+  else if( argc == 4 )
   {
     //checks the dimensions of the matrix
     mrows = atoi(argv[2]);
     mcols = atoi(argv[3]);
     data = newMatrix( mrows, mcols );
   }
+	else
+	{
+		cout << "Usage: matedit filename [nrows] [ncols]" << endl;
+		return 0;
+	}
   // using ncurses for the display in the new window
   WINDOW *wnd;
   wnd = initscr();
