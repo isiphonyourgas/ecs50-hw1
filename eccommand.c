@@ -7,7 +7,7 @@ int r,c,  // current row and column (upper-left is (0,0))
     ncols,  // number of columns in window
     rmax, cmax, c1;
 
-int data[10][10];
+int data[30][30];
 char sentence[80];
 char *tokenPtr;
 char numstr[6];
@@ -28,12 +28,49 @@ void draw()
 }
 
 
-int main()
+int main(int argc, char *argv[])
 
-{  int i, j;    
+{  int i, j, numval;    
    WINDOW *wnd;
-   rmax = 3;
-   cmax = 4;
+   FILE *fPtr;
+
+   // rmax = 3;
+   // cmax = 4;
+
+   if (argc == 4)
+   { rmax = atoi(argv[2]);
+     cmax = atoi(argv[3]);
+    
+     r = 0; c = 0; c1 = 0;
+     for (r=0; r < rmax; r++)
+        { for (c=0;c < cmax; c++) 
+            {  data[r][c] = 0; 
+            }
+        }
+   }else // argc == 2 read data from file
+   {
+      fPtr = fopen(argv[1], "rb");
+      i = 0; r = 0; c = 0;
+      while(!feof(fPtr))
+      {
+         fread(&numval, sizeof(int), 1, fPtr);
+         i++;
+
+         if (i == 1) // Number of rows
+         { rmax = numval;}
+         else if (i == 2) // Number of columns
+         { cmax = numval;}
+         else
+         { data[r][c] = numval;
+           c++; // go to next column
+           if (c >= cmax)
+           { c = 0; //reset column to zero
+             r++; //go to next row
+           }
+         }
+      }
+      fclose(fPtr);
+   }
 
    wnd = initscr();  // curses call to initialize window
    // cbreak();  // curses call to set no waiting for Enter key
@@ -42,12 +79,6 @@ int main()
    clear();  // curses call to clear screen, send cursor to position (0,0)
    refresh();  // curses call to implement all changes since last refresh
 
-   r = 0; c = 0; c1 = 0;
-   for (r=0; r < rmax; r++)
-      {	for (c=0;c < cmax; c++) 
-          {  data[r][c] = 0; 
-          }
-      }
    draw();
 
    r = 0; c = 0; c1 = 0;
@@ -92,15 +123,25 @@ int main()
           }
           draw();
       } 
+      else if (strstr(sentence,"sve") != NULL) {
+         fPtr = fopen(argv[1], "wb");
+         numval = rmax;
+         fwrite(&numval, sizeof(int), 1, fPtr);
+         numval = cmax;
+         fwrite(&numval, sizeof(int), 1, fPtr);
+         r = 0; c = 0;
+         for (r=0; r < rmax; r++)
+         { for (c=0;c < cmax; c++) 
+              {  numval = data[r][c]; 
+                 fwrite(&numval, sizeof(int), 1, fPtr);
+              }
+         }
+         fclose(fPtr);         
+      }
       else break;
 
     }
 
    endwin();  // curses call to restore the original window and leave
    return 0;
-
-
-
-
-
 }
