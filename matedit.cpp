@@ -9,11 +9,16 @@
 
 using namespace std;
 
+// row and col variables are the current row and col in the matrix
+// topr and topc are the row and col of the top left position
+// nrows and ncols are the max rows/cols per screen
 int row, col, topr, topc, nrows, ncols;
 
-inline int r() { return row - topr; }
+// r() and c() convert the current position in the matrix to
+// the position of the cursor when it's aligned with the current box
+inline int r(int arg = row) { return arg - topr; }
 
-inline int c() { return (col - topc + 1) * 12; }
+inline int c(int arg = col) { return (arg - topc + 1) * 12; }
 
 // reads in the data file
 int** readFile( int &mrows, int &mcols, ifstream &file )
@@ -63,7 +68,7 @@ int** newMatrix( int mrows, int mcols )
   {
     for(j=0; j < mcols; j++)
     {
-      data[i][j] = 0;
+      data[i][j] = j;
     }
   }
   return data;
@@ -81,29 +86,27 @@ void draw( int *data[], int tr, int tc, int mrows, int mcols )
   // Here we make a string (dstring) of spaces with a length of 12
   // and then replace the last spaces with the number stored in
   // the matrix array.
-  for(i = topr; i < (nrows < mrows-topr ? nrows : mrows); i++)
+  for(i = topr; i < (nrows < mrows-topr ? nrows + topr : mrows); i++)
   {
-    for(j = topc; j < (ncols < mcols-topc ? ncols : mcols); j++)
+    for(j = topc; j < (ncols < mcols-topc ? ncols + topc : mcols); j++)
     {
       dstring = "            ";
       ss << data[i][j];
       dstring += ss.str();
       dstring = dstring.substr(ss.str().length(), 12);
       addstr(dstring.c_str());
-      col++;
-      move(r(),c()-11);
+      tmpcol++;
+      move(r(tmprow),c(tmpcol)-11);
       refresh();
       // reset the stream
       ss.flush();
       ss.str("");
     }
-    row++;
-    col = 0;
-    move(r(),c()-11);
+    tmprow++;
+    tmpcol = 0;
+    move(r(tmprow),c(tmpcol)-11);
     ss.str("");
   }
-	row = tmprow;
-	col = tmpcol;
 }
 
 // main function. tests whether a file exists. open and reads the existing file.
@@ -177,13 +180,17 @@ int main(int argc, char *argv[])
       {
         // make a stream from cmd, ignore the "mc" portion
         // and then read in the integers that follow into
-        // rtemp and ctemp
+        // row and col
         stringstream command;
         command << cmd;
         command.ignore( 3, ' ');
         command >> row;
         command >> col;
 				row--; col--; // because position (1,1) should be (0,0)
+				if( row > topr + nrows || col > topc + ncols )
+				  draw( data, row, col, mrows, mcols );
+			  else if( row < topr || col < topc )
+				  draw( data, row, col, mrows, mcols );
         // move to correct position
         move( r(), c() );
       }
