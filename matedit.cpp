@@ -9,7 +9,11 @@
 
 using namespace std;
 
-int rows, cols, r, c, topr, topc;
+int row, col, topr, topc, nrows, ncols;
+
+inline int r() { return row - topr; }
+
+inline int c() { return (col - topc + 1) * 12; }
 
 // reads in the data file
 int** readFile( int &mrows, int &mcols, ifstream &file )
@@ -65,35 +69,41 @@ int** newMatrix( int mrows, int mcols )
   return data;
 }
 
-void draw( int *data[], int tr, int tc )
+void draw( int *data[], int tr, int tc, int mrows, int mcols )
 {
+	int tmprow = row;
+	int tmpcol = col;
+  topr = tr;
+	topc = tc;
   stringstream ss;
   int i, j;
-  string dstring = "            ";
+  string dstring;
   // Here we make a string (dstring) of spaces with a length of 12
   // and then replace the last spaces with the number stored in
   // the matrix array.
-  for(i = topr; i < topr + (rows-1); i++)
+  for(i = topr; i < (nrows < mrows-topr ? nrows : mrows); i++)
   {
-    for(j = topc; j < topc + cols/12; j++)
+    for(j = topc; j < (ncols < mcols-topc ? ncols : mcols); j++)
     {
-      //dstring = "            ";
+      dstring = "            ";
       ss << data[i][j];
       dstring += ss.str();
       dstring = dstring.substr(ss.str().length(), 12);
       addstr(dstring.c_str());
-      c += 12;
-      move(r,c);
+      col++;
+      move(r(),c()-11);
       refresh();
       // reset the stream
       ss.flush();
       ss.str("");
     }
-    r++;
-    c = 0;
-    move(r,c);
+    row++;
+    col = 0;
+    move(r(),c()-11);
     ss.str("");
   }
+	row = tmprow;
+	col = tmpcol;
 }
 
 // main function. tests whether a file exists. open and reads the existing file.
@@ -102,7 +112,6 @@ int main(int argc, char *argv[])
   char d; // used with getch
   int mrows = 0, mcols = 0;
   //int i,j, 
-  int rtemp, ctemp;
   int **data;
   string dstring;
   string cmd, cmd_part;
@@ -131,13 +140,19 @@ int main(int argc, char *argv[])
   // using ncurses for the display in the new window
   WINDOW *wnd;
   wnd = initscr();
-  getmaxyx(wnd,rows,cols);
+  //getmaxyx(wnd,nrows,ncols);
+	nrows = LINES - 1; // How many rows or columns of the
+	ncols = COLS/12;  // matrix can fit on one screen
   clear();
   noecho();
   refresh();
   topr = 0; topc = 0;
+	row = 0; col = 0;
 
-  move(r,c);
+	move(r(), c()-11);
+	draw( data, 0, 0, mrows, mcols );
+
+  move(r(),c());
 
   // set to blank to start
   cmd = "";
@@ -166,13 +181,11 @@ int main(int argc, char *argv[])
         stringstream command;
         command << cmd;
         command.ignore( 3, ' ');
-        command >> rtemp;
-        command >> ctemp;
-        // adjust to the "true" dimensions of the matrix
-        r = rtemp - 1;
-        c = (ctemp * 12) - 1;
+        command >> row;
+        command >> col;
+				row--; col--; // because position (1,1) should be (0,0)
         // move to correct position
-        move( r  , c);
+        move( r(), c() );
       }
       else
       {
