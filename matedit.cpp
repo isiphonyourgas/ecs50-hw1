@@ -172,18 +172,11 @@ int main(int argc, char *argv[])
     // d will be added to the cmd string if it's not '\n'
     d = getch();
     // when enter is pressed, process the characters stored in cmd
+
     if( d == '\n')
     {
-      // command for "save and exit"
-      if(cmd == "sve")
-      {
-        f.open( argv[1], ios::out | ios::binary );
-        saveFile( data, mrows, mcols, f );
-        f.close();
-        break;
-      }
-     // move the cursor
-      else if(cmd.substr(0,2) == "mc")
+      // move the cursor
+      if(cmd.substr(0,2) == "mc")
       {
         // make a stream from cmd, ignore the "mc" portion
         // and then read in the integers that follow into
@@ -227,7 +220,7 @@ int main(int argc, char *argv[])
 
       else
       {
-        // go back to beginning of loop if something went wrongi
+        // go back to beginning of loop if something went wrong
 				cmd = "";
         continue;
       }
@@ -237,7 +230,17 @@ int main(int argc, char *argv[])
     {  
       // if enter is not pressed, add the character to cmd
       cmd += d;
-      }
+    }
+
+    // command for "save and exit"
+    if( cmd == "sve" )
+    {
+      f.open( argv[1], ios::out | ios::binary );
+      saveFile( data, mrows, mcols, f );
+      f.close();
+      break;
+    }
+
   } 
   endwin();
   return 0;
