@@ -68,7 +68,7 @@ int** newMatrix( int mrows, int mcols )
   {
     for(j=0; j < mcols; j++)
     {
-      data[i][j] = j;
+      data[i][j] = 0;
     }
   }
   return data;
@@ -186,14 +186,25 @@ int main(int argc, char *argv[])
         command >> row;
         command >> col;
 				row--; col--; // because position (1,1) should be (0,0)
-				if( row > topr + nrows || col > topc + ncols )
+        // set row and col if row or col is out of range
+        if( row < 0 )
+          row = 0;
+        if( col < 0 )
+          col = 0;
+        if( row >= mrows )
+          row = mrows - 1;
+        if( col >= mcols )
+          col = mcols - 1;
+
+        // draw at new position if row or col exceeds screen
+				if( row >= topr + nrows || col >= topc + ncols )
 				  draw( data, row, col, mrows, mcols );
 			  else if( row < topr || col < topc )
 				  draw( data, row, col, mrows, mcols );
         // move to correct position
         move( r(), c() );
+        command.ignore();
 				command.clear();
-				command.sync();
       }
 			else if(cmd.substr(0,2) == "ec")
 			{
@@ -208,14 +219,26 @@ int main(int argc, char *argv[])
 					{
 					  col = 0;
 						row++;
+            if(row == mrows)
+            {
+              row = mrows - 1;
+              col = mcols - 1;
+              break;
+            }
 				  }
 					data[row][col] = num;
 					col++;
 				}
+        // redraw if it goes beyond the screen
+				if( row >= topr + nrows || col >= topc + ncols )
+				  draw( data, row, col, mrows, mcols );
+			  else if( row < topr || col < topc )
+				  draw( data, row, col, mrows, mcols );
+
 				draw( data, topr, topc, mrows, mcols );
 				move(r(),c());
+        command.ignore();
 			  command.clear();
-				command.sync();
 			}
 
       else
