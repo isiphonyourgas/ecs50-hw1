@@ -175,6 +175,7 @@ int main(int argc, char *argv[])
 
     if( d == '\n')
     {
+      //cmd += '\n';
       // move the cursor
       if(cmd.substr(0,2) == "mc")
       {
@@ -203,8 +204,10 @@ int main(int argc, char *argv[])
 				  draw( data, row, col, mrows, mcols );
         // move to correct position
         move( r(), c() );
-        command.ignore();
-				command.clear();
+        while( !command.eof() )
+          command.ignore();
+
+				command.clear(); // clear eof
       }
 			else if(cmd.substr(0,2) == "ec")
 			{
@@ -229,7 +232,12 @@ int main(int argc, char *argv[])
 					data[row][col] = num;
 					col++;
 				}
-        // redraw if it goes beyond the screen
+
+        // Prevent moving beyond the max column
+        if( col == mcols )
+          col = mcols - 1;
+
+        // redraw if it goes beyond the screen or beyond the matrix
 				if( row >= topr + nrows || col >= topc + ncols )
 				  draw( data, row, col, mrows, mcols );
 			  else if( row < topr || col < topc )
@@ -237,7 +245,9 @@ int main(int argc, char *argv[])
 
 				draw( data, topr, topc, mrows, mcols );
 				move(r(),c());
-        command.ignore();
+        while( !command.eof() )
+          command.ignore();
+
 			  command.clear();
 			}
 
