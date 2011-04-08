@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
   wnd = initscr();
   //getmaxyx(wnd,nrows,ncols);
 	nrows = LINES - 1; // How many rows or columns of the
-	ncols = COLS/12;  // matrix can fit on one screen
+	ncols = COLS/12 - 1;  // matrix can fit on one screen
   clear();
   noecho();
   refresh();
@@ -217,18 +217,20 @@ int main(int argc, char *argv[])
 				int num;
 				while( !command.eof() )
 				{
-				  command >> num;
-				  if(col == mcols)
-					{
-					  col = 0;
-						row++;
-            if(row == mrows)
-            {
-              row = mrows - 1;
-              col = mcols - 1;
-              break;
-            }
-				  }
+				  if(command >> num)
+				  {
+            if(col == mcols)
+  					{
+  					  col = 0;
+  						row++;
+              if(row == mrows)
+              {
+                row = mrows - 1;
+                col = mcols - 1;
+                break;
+              }
+  				  }
+          }
 					data[row][col] = num;
 					col++;
 				}
